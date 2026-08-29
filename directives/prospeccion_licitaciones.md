@@ -177,6 +177,14 @@ Objetivo distinto al de "Decisores de compra" (que parte de constructoras grande
 
 **Dashboard visual (Artifact HTML):** "Radar MACDERA" — snapshot visual de las 6 bases (cobertura de contacto, desglose de Aspirantes_Piso_Vinilico por estado de contacto, categorías de Leads_Comerciales, split por ciudad). **Limitación importante:** a diferencia de la pestaña `Resumen_Dashboard`, este Artifact NO se actualiza solo — es una página estática que hay que volver a publicar (mismo archivo, mismo path) cada vez que se quiera reflejar el estado más reciente. Una rutina en la nube no puede publicar Artifacts (esa herramienta solo existe en una sesión interactiva de Claude Code), así que "actualizarlo a diario" en el sentido literal solo es posible si alguien con una sesión abierta lo pide explícitamente cada día, o refrescándolo manualmente al ritmo que tenga sentido para el negocio (ej. una vez por semana) en vez de a diario. La pestaña `Resumen_Dashboard` del Sheet es la que sí cumple "actualizado a diario" sin intervención.
 
+## Gotcha de Google Sheets: `USER_ENTERED` rompe teléfonos que empiezan con "+"
+
+Al escribir filas con `GOOGLESHEETS_VALUES_UPDATE` en modo `value_input_option: "USER_ENTERED"` (el modo usado por defecto en este proyecto para que fechas/números se vean bien formateados), cualquier celda de texto que **empiece literalmente por "+"** se interpreta como el inicio de una fórmula:
+- Si el resto no es un número válido (ej. `"+57 315 0737004"`, con espacios) → la celda queda en `#ERROR!` y el dato se pierde silenciosamente hasta que alguien lo nota.
+- Si el resto SÍ es un número válido sin espacios (ej. `"+573168818863"`) → Sheets lo evalúa como el operador unario "+" sobre ese número y el "+" desaparece sin error visible (queda `573168818863`), un dato sutilmente incorrecto que tampoco salta a la vista.
+
+**Regla para cualquier script o carga futura a este Sheet:** cualquier columna que pueda contener un teléfono en formato internacional (`+57 ...`) debe escribirse con `value_input_option: "RAW"`, nunca `USER_ENTERED` — o anteponer un apóstrofe (`'+57...`) si se necesita forzar texto en modo USER_ENTERED. Después de cualquier carga masiva de teléfonos, vale la pena releer la columna con `GOOGLESHEETS_VALUES_GET` y buscar `#ERROR!` o números que deberían empezar en "+" y no lo hacen.
+
 ## Casos extremos / pendientes
 
 - **Google Drive:** el conector nativo de este entorno requiere reconexión con permisos adicionales. **Ya hay una vía alterna funcionando:** el conector de Google Drive/Gmail/Sheets vía **Composio** está activo (cuenta nmacdera@gmail.com) — usar ese en vez de reintentar el conector nativo.
