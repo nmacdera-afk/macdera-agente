@@ -1,0 +1,17 @@
+# Archivos intermedios (siempre regenerables)
+.tmp/
+
+# Secretos y credenciales
+.env
+credentials.json
+token.json
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
