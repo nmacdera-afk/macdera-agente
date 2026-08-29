@@ -136,6 +136,19 @@ python execution/secop_ii_registro_proveedores.py
 
 **Limitación de automatización diaria:** este método depende de una sesión de Chrome real y autenticada por el usuario (`mcp__claude-in-chrome__*`), que solo existe dentro de una sesión interactiva de Claude Code en la máquina del usuario — **no se puede correr desde una tarea programada en la nube** (el scheduler no tiene el navegador del usuario abierto ni su sesión). La parte de SECOP II (`secop_ii_buscar.py`) sí es 100% automatizable en la nube porque usa la API abierta sin login. Por ahora: SECOP II se programa a diario; licitaciones.info se corre manualmente cuando el usuario tenga una sesión abierta (ej. una vez por semana, o cuando pida "actualiza aspirantes").
 
+## Prospección de decisores de compra (Google Maps + web pública)
+
+Además de las licitaciones, la directiva pide identificar directamente al **decisor de compra** dentro de cada constructora (director/jefe de compras, director de obra, ingeniero residente) — no solo el nombre de la empresa — para que ventas pueda llamar a la persona correcta.
+
+**Pestaña en el Sheet:** `Decisores_Compra_GMaps` en el mismo [Google Sheet](https://docs.google.com/spreadsheets/d/1TT0NU5qW_fNiB-P37ENYlNquS40o1HcJxjN3ggSBS8U/edit).
+
+**Método (delegable a un subagente general-purpose en background, ya probado):**
+1. Buscar constructoras con oficinas activas en Bogotá/Medellín vía `COMPOSIO_SEARCH_GOOGLE_MAPS` (toolkit `composio_search`, sin autenticación) — trae nombre, dirección y teléfono de Google Maps.
+2. Por cada constructora, usar `COMPOSIO_SEARCH_WEB` / `WebSearch` / `WebFetch` para: confirmar sitio web y correo/teléfono general (página "contacto"), y buscar el nombre de un Director de Obra / Jefe o Director de Compras / Ingeniero Residente en fuentes públicas (perfiles de LinkedIn indexados en resultados de búsqueda, EMIS, Adapt.io, RocketReach). **Nunca iniciar sesión en LinkedIn ni sortear un muro de pago.**
+3. Guardar cada registro en JSON antes de pasarlo al Sheet (ver `.tmp/leads_comerciales/prospectos_google_maps.json` como referencia de estructura: constructora, ciudad, dirección, teléfono/correo de empresa, sitio web, nombre y cargo del contacto, fuente exacta, fecha).
+
+**Hallazgo real de la primera corrida (24 constructoras, 16 con contacto por nombre):** el teléfono/correo **directo de la persona** casi nunca es público — lo que sí se encuentra de forma confiable es su **nombre y cargo** (vía LinkedIn/EMIS/Adapt.io) junto con el canal general de la empresa. La estrategia de llamada recomendada para ventas: llamar al conmutador/correo general de la empresa y pedir específicamente por esa persona por nombre y cargo — es mucho más efectivo que preguntar genéricamente por "el de compras".
+
 ## Casos extremos / pendientes
 
 - **Google Drive:** el conector nativo de este entorno requiere reconexión con permisos adicionales. **Ya hay una vía alterna funcionando:** el conector de Google Drive/Gmail/Sheets vía **Composio** está activo (cuenta nmacdera@gmail.com) — usar ese en vez de reintentar el conector nativo.
