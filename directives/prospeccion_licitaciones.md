@@ -104,7 +104,7 @@ Stack sugerido originalmente por el usuario vs. estado real disponible en este e
 
 ## Base de datos de leads comerciales ("aspirantes")
 
-**Google Sheet en vivo:** [MACDERA - Leads y Licitaciones](https://docs.google.com/spreadsheets/d/1TT0NU5qW_fNiB-P37ENYlNquS40o1HcJxjN3ggSBS8U/edit) (creado vía Composio en la cuenta nmacdera@gmail.com), con dos pestañas:
+**Google Sheet en vivo:** [MACDERA - Leads y Licitaciones](https://docs.google.com/spreadsheets/d/1hA8SlNJMfVpJnsxjN_J2qKN-dWPq-UgjwJttutCQ5E4/edit) (`spreadsheet_id: 1hA8SlNJMfVpJnsxjN_J2qKN-dWPq-UgjwJttutCQ5E4`, cuenta **nelson.macdera@gmail.com** desde el 2026-10-26 — ver aprendizaje del 2026-10-26 sobre la migración por cuota de Drive llena en nmacdera@gmail.com; el Sheet original, mismo nombre, sigue existiendo en nmacdera@gmail.com como solo-lectura/histórico, `spreadsheet_id: 1TT0NU5qW_fNiB-P37ENYlNquS40o1HcJxjN3ggSBS8U`, pero ya NO es el destino de escritura de la rutina diaria), con dos pestañas:
 - **Leads_Comerciales:** directorio de empresas para que el equipo comercial llame — NIT, nombre, categoría, teléfono, correo, dirección, sitio web, ciudad, representante legal (+ su teléfono/correo), fecha de registro, y columnas de seguimiento (`estado_gestion`, `fecha_agregado`) para que ventas marque el avance sin que el agente las pise en corridas futuras.
 - **Procesos_Licitaciones:** el log de procesos SECOP II detectados día a día (salida de `secop_ii_buscar.py`), con las mismas columnas de `estado_gestion`/`fecha_agregado` para evitar duplicar alertas de un mismo `id_del_proceso`.
 
@@ -140,7 +140,7 @@ python execution/secop_ii_registro_proveedores.py
 
 Además de las licitaciones, la directiva pide identificar directamente al **decisor de compra** dentro de cada constructora (director/jefe de compras, director de obra, ingeniero residente) — no solo el nombre de la empresa — para que ventas pueda llamar a la persona correcta.
 
-**Pestaña en el Sheet:** `Decisores_Compra_GMaps` en el mismo [Google Sheet](https://docs.google.com/spreadsheets/d/1TT0NU5qW_fNiB-P37ENYlNquS40o1HcJxjN3ggSBS8U/edit).
+**Pestaña en el Sheet:** `Decisores_Compra_GMaps` en el mismo [Google Sheet](https://docs.google.com/spreadsheets/d/1hA8SlNJMfVpJnsxjN_J2qKN-dWPq-UgjwJttutCQ5E4/edit) (cuenta nelson.macdera@gmail.com desde el 2026-10-26, ver nota arriba).
 
 **Método (delegable a un subagente general-purpose en background, ya probado):**
 1. Buscar constructoras con oficinas activas en Bogotá/Medellín vía `COMPOSIO_SEARCH_GOOGLE_MAPS` (toolkit `composio_search`, sin autenticación) — trae nombre, dirección y teléfono de Google Maps.
